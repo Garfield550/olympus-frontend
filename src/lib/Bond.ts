@@ -11,6 +11,7 @@ import React from "react";
 export enum NetworkID {
   Mainnet = 1,
   Testnet = 4,
+  HSCMainnet = 70,
 }
 
 export enum BondType {
@@ -26,6 +27,7 @@ export interface BondAddresses {
 export interface NetworkAddresses {
   [NetworkID.Mainnet]: BondAddresses;
   [NetworkID.Testnet]: BondAddresses;
+  [NetworkID.HSCMainnet]: BondAddresses;
 }
 
 export interface Available {

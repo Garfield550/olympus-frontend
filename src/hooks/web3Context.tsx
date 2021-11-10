@@ -37,6 +37,10 @@ function getMainnetURI(): string {
   return allURIs[randomIndex];
 }
 
+function getHooSmartChanURI(): string {
+  return EnvHelper.hooSmartChanURI;
+}
+
 /*
   Types
 */
@@ -142,9 +146,19 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
   const _checkNetwork = (otherChainID: number): boolean => {
     if (chainID !== otherChainID) {
       console.warn("You are switching networks");
-      if (otherChainID === 1 || otherChainID === 4) {
+      if (otherChainID === 1) {
         setChainID(otherChainID);
-        otherChainID === 1 ? setUri(getMainnetURI()) : setUri(getTestnetURI());
+        setUri(getMainnetURI());
+        return true;
+      }
+      if (otherChainID === 4) {
+        setChainID(otherChainID);
+        setUri(getTestnetURI());
+        return true;
+      }
+      if (otherChainID === 70) {
+        setChainID(otherChainID);
+        setUri(getHooSmartChanURI());
         return true;
       }
       return false;
