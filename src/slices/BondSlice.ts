@@ -162,7 +162,7 @@ export const calcBondDetails = createAsyncThunk(
     // Calculate bonds purchased
     let purchased = await bond.getTreasuryBalance(networkID, provider);
 
-    return {
+    const details: IBondDetails = {
       bond: bond.name,
       bondDiscount,
       debtRatio: Number(debtRatio.toString()),
@@ -173,6 +173,10 @@ export const calcBondDetails = createAsyncThunk(
       bondPrice: Number(bondPrice.toString()) / Math.pow(10, 18),
       marketPrice: marketPrice,
     };
+
+    console.log("bonding/calcBondDetails::details:", details);
+
+    return details;
   },
 );
 

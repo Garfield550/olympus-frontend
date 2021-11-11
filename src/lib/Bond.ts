@@ -1,8 +1,9 @@
 import { StaticJsonRpcProvider, JsonRpcSigner } from "@ethersproject/providers";
 import { ethers } from "ethers";
 
-import { abi as ierc20Abi } from "src/abi/IERC20.json";
 import { getTokenPrice } from "src/helpers";
+// import { abi as ierc20Abi } from "src/abi/IERC20.json";
+import { abi as erc20Abi } from "src/abi/ERC20.json";
 import { getBondCalculator } from "src/helpers/BondCalculator";
 import { EthContract, PairContract } from "src/typechain";
 import { addresses } from "src/constants";
@@ -33,6 +34,7 @@ export interface NetworkAddresses {
 export interface Available {
   [NetworkID.Mainnet]?: boolean;
   [NetworkID.Testnet]?: boolean;
+  [NetworkID.HSCMainnet]?: boolean;
 }
 
 interface BondOpts {
@@ -158,13 +160,15 @@ export class StableBond extends Bond {
     super(BondType.StableAsset, stableBondOpts);
     // For stable bonds the display units are the same as the actual token
     this.displayUnits = stableBondOpts.displayName;
-    this.reserveContract = ierc20Abi; // The Standard ierc20Abi since they're normal tokens
+    this.reserveContract = erc20Abi; // The Standard ierc20Abi since they're normal tokens // fix(550): use ERC20 ABI
   }
 
   async getTreasuryBalance(networkID: NetworkID, provider: StaticJsonRpcProvider) {
     let token = this.getContractForReserve(networkID, provider);
     let tokenAmount = await token.balanceOf(addresses[networkID].TREASURY_ADDRESS);
-    return Number(tokenAmount.toString()) / Math.pow(10, 18);
+    console.log("getTreasuryBalance::tokenAmount:", tokenAmount.toString());
+    const decimals = await token.decimals();
+    return Number(tokenAmount.toString()) / Math.pow(10, decimals);
   }
 }
 
