@@ -67,7 +67,7 @@ export const addresses: IAddresses = {
     STAKING_HELPER_ADDRESS: "0xBE7e24581d384f1539Edc1B175B1B98751f8EC0A", // StakingHelper
     SOHM_ADDRESS: "0xcE807622b097bf6e441984a8785CFC80944876FA", // sOlympus
     WSOHM_ADDRESS: "",
-    BONDINGCALC_ADDRESS: "", // OlympusBondingCalculator
+    BONDINGCALC_ADDRESS: "0x9542998067eb8c0e1F2D78507F114f61d6E513a6", // OlympusBondingCalculator
     TREASURY_ADDRESS: "0x1381192ae3a3475618a9d93e8757b76B30D696f8", // OlympusTreasury
     CRUCIBLE_OHM_LUSD: "", // Aludel
     LQTY: "", // LQTYToken
