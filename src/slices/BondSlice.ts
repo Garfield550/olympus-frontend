@@ -87,7 +87,8 @@ export const calcBondDetails = createAsyncThunk(
     const bondCalcContract = getBondCalculator(networkID, provider);
 
     const terms = await bondContract.terms();
-    const maxBondPrice = await bondContract.maxPayout();
+    const _maxBondPrice = await bondContract.maxPayout();
+    console.log("bonding/calcBondDetails::maxBondPrice:", _maxBondPrice, _maxBondPrice.toString());
     let debtRatio: BigNumberish;
     // TODO (appleseed): improve this logic
     if (bond.name === "cvx") {
@@ -149,12 +150,12 @@ export const calcBondDetails = createAsyncThunk(
         bondQuote = Number(bondQuote.toString()) / Math.pow(10, 18);
       }
     }
-
+    const maxBondPrice = Number(_maxBondPrice.toString()) / Math.pow(10, 9);
     // Display error if user tries to exceed maximum.
-    if (!!value && parseFloat(bondQuote.toString()) > Number(maxBondPrice.toString()) / Math.pow(10, 9)) {
+    if (!!value && parseFloat(bondQuote.toString()) > maxBondPrice) {
       const errorString =
         "You're trying to bond more than the maximum payout available! The maximum bond payout is " +
-        (Number(maxBondPrice.toString()) / Math.pow(10, 9)).toFixed(2).toString() +
+        maxBondPrice.toFixed(2).toString() +
         " OHM.";
       dispatch(error(errorString));
     }
@@ -169,7 +170,7 @@ export const calcBondDetails = createAsyncThunk(
       bondQuote: Number(bondQuote.toString()),
       purchased,
       vestingTerm: Number(terms.vestingTerm.toString()),
-      maxBondPrice: Number(maxBondPrice.toString()) / Math.pow(10, 9),
+      maxBondPrice,
       bondPrice: Number(bondPrice.toString()) / Math.pow(10, 18),
       marketPrice: marketPrice,
     };
@@ -185,8 +186,10 @@ export const bondAsset = createAsyncThunk(
   async ({ value, address, bond, networkID, provider, slippage }: IBondAssetAsyncThunk, { dispatch }) => {
     const depositorAddress = address;
     const acceptedSlippage = slippage / 100 || 0.005; // 0.5% as default
+    const decimals = await bond.getContractForReserve(networkID, provider).decimals();
+    console.log("bonding/bondAsset::decimals:", decimals);
     // parseUnits takes String => BigNumber
-    const valueInWei = ethers.utils.parseUnits(value.toString(), "ether");
+    const valueInWei = ethers.utils.parseUnits(value.toString(), decimals);
     let balance;
     // Calculate maxPremium based on premium and slippage.
     // const calculatePremium = await bonding.calculatePremium();
