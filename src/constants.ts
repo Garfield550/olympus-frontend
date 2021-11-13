@@ -72,7 +72,7 @@ export const addresses: IAddresses = {
     CRUCIBLE_OHM_LUSD: "", // Aludel
     LQTY: "", // LQTYToken
     MIST: "", // Alchemist
-    REDEEM_HELPER_ADDRESS: "", // RedeemHelper
+    REDEEM_HELPER_ADDRESS: "0x6F62a16ebf69BEe0Cb12D89Bfa30940EfdDCD5a3", // RedeemHelper
     FUSE_6_SOHM: "", // CErc20Delegator
     FUSE_18_SOHM: "", // CErc20Delegator
     PT_TOKEN_ADDRESS: "", // Ticket

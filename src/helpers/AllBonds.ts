@@ -51,7 +51,7 @@ export const dai = new StableBond({
       reserveAddress: "0xB2180448f8945C8Cc8AE9809E67D6bd27d8B2f2C",
     },
     [NetworkID.HSCMainnet]: {
-      bondAddress: "0xE828a37620f55d95aa62a7A608E6FaEd6A5c8B91", // USDT Bond
+      bondAddress: "0x05F9ae485F0108F8C763F70DE91fAe2B4A728Ce1", // USDT Bond
       reserveAddress: "0xD16bAbe52980554520F6Da505dF4d1b124c815a7", // USDT
     },
   },
