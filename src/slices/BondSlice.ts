@@ -85,10 +85,11 @@ export const calcBondDetails = createAsyncThunk(
       bondQuote: BigNumberish = BigNumber.from(0);
     const bondContract = bond.getContractForBond(networkID, provider);
     const bondCalcContract = getBondCalculator(networkID, provider);
+    const reserveContract = bond.getContractForReserve(networkID, provider);
+    const decimals = await reserveContract.decimals();
 
     const terms = await bondContract.terms();
     const _maxBondPrice = await bondContract.maxPayout();
-    console.log("bonding/calcBondDetails::maxBondPrice:", _maxBondPrice, _maxBondPrice.toString());
     let debtRatio: BigNumberish;
     // TODO (appleseed): improve this logic
     if (bond.name === "cvx") {
@@ -116,7 +117,8 @@ export const calcBondDetails = createAsyncThunk(
         let assetPriceUSD = await bond.getBondReservePrice(networkID, provider);
         bondPrice = bondPriceRaw.mul(BigNumber.from(String(assetPriceUSD * 10 ** 14)));
       } else {
-        bondPrice = await bondContract.bondPriceInUSD();
+        const price = await bondContract.bondPriceInUSD();
+        bondPrice = price.div(BigNumber.from(10 ** decimals));
       }
       bondDiscount = (marketPrice * Math.pow(10, 18) - Number(bondPrice.toString())) / Number(bondPrice.toString()); // 1 - bondPrice / (bondPrice * Math.pow(10, 9));
     } catch (e) {
@@ -171,7 +173,7 @@ export const calcBondDetails = createAsyncThunk(
       purchased,
       vestingTerm: Number(terms.vestingTerm.toString()),
       maxBondPrice,
-      bondPrice: Number(bondPrice.toString()) / Math.pow(10, 18),
+      bondPrice: Number(bondPrice.toString()),
       marketPrice: marketPrice,
     };
 
