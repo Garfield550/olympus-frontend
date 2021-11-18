@@ -90,14 +90,14 @@ function BondPurchase({ bond, slippage, recipientAddress }) {
   }, [bond.allowance]);
 
   const setMax = () => {
-    let maxQ;
+    let maxQ = 0;
     if (bond.maxBondPrice * bond.bondPrice < Number(bond.balance)) {
       // there is precision loss here on Number(bond.balance)
       maxQ = bond.maxBondPrice * bond.bondPrice.toString();
     } else {
       maxQ = bond.balance;
     }
-    setQuantity(maxQ);
+    setQuantity(maxQ.toString());
   };
 
   const bondDetailsDebounce = useDebounce(quantity, 1000);

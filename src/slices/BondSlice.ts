@@ -74,6 +74,7 @@ export interface IBondDetails {
 export const calcBondDetails = createAsyncThunk(
   "bonding/calcBondDetails",
   async ({ bond, value, provider, networkID }: ICalcBondDetailsAsyncThunk, { dispatch }): Promise<IBondDetails> => {
+    console.log("bonding/calcBondDetails", bond.name);
     if (!value || value === "") {
       value = "0";
     }
@@ -90,12 +91,16 @@ export const calcBondDetails = createAsyncThunk(
 
     const terms = await bondContract.terms();
     const _maxBondPrice = await bondContract.maxPayout();
-    let debtRatio: BigNumberish;
+    let debtRatio: BigNumberish = BigNumber.from(0);
     // TODO (appleseed): improve this logic
-    if (bond.name === "cvx") {
-      debtRatio = await bondContract.debtRatio();
-    } else {
-      debtRatio = await bondContract.standardizedDebtRatio();
+    try {
+      if (bond.name === "cvx") {
+        debtRatio = await bondContract.debtRatio();
+      } else {
+        debtRatio = await bondContract.standardizedDebtRatio();
+      }
+    } catch (error) {
+      console.log("error getting debt ratio", error);
     }
     debtRatio = Number(debtRatio.toString()) / Math.pow(10, 9);
 
@@ -129,9 +134,9 @@ export const calcBondDetails = createAsyncThunk(
       // if inputValue is 0 avoid the bondQuote calls
       bondQuote = BigNumber.from(0);
     } else if (bond.isLP) {
-      valuation = Number(
-        (await bondCalcContract.valuation(bond.getAddressForReserve(networkID), amountInWei)).toString(),
-      );
+      const _valuation = await bondCalcContract.valuation(bond.getAddressForReserve(networkID), amountInWei);
+      console.log("bonding/calcBondDetails::valuation", _valuation);
+      valuation = Number(_valuation.toString());
       bondQuote = await bondContract.payoutFor(valuation);
       if (!amountInWei.isZero() && Number(bondQuote.toString()) < 100000) {
         bondQuote = BigNumber.from(0);

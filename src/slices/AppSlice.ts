@@ -166,6 +166,7 @@ export const findOrLoadMarketPrice = createAsyncThunk(
 const loadMarketPrice = createAsyncThunk("app/loadMarketPrice", async ({ networkID, provider }: IBaseAsyncThunk) => {
   let marketPrice: number;
   try {
+    console.log("fetching market price");
     marketPrice = await getMarketPrice({ networkID, provider });
     marketPrice = marketPrice / Math.pow(10, 9);
   } catch (e) {

@@ -191,7 +191,7 @@ export const ohm_dai = new LPBond({
   name: "ohm_dai_lp",
   displayName: "OHM-DAI LP",
   bondToken: "DAI",
-  isAvailable: { [NetworkID.Mainnet]: false, [NetworkID.Testnet]: true },
+  isAvailable: { [NetworkID.Mainnet]: false, [NetworkID.Testnet]: true, [NetworkID.HSCMainnet]: true },
   bondIconSvg: OhmDaiImg,
   bondContractABI: BondOhmDaiContract,
   reserveContract: ReserveOhmDaiContract,
@@ -205,8 +205,8 @@ export const ohm_dai = new LPBond({
       reserveAddress: "0x8D5a22Fb6A1840da602E56D1a260E56770e0bCE2",
     },
     [NetworkID.HSCMainnet]: {
-      bondAddress: "0x0000000000000000000000000000000000000000", // TODO: Add OHM-DAI LP address
-      reserveAddress: "0x0000000000000000000000000000000000000000", // TODO: Add OHM-DAI LP address
+      bondAddress: "0xc2DB36de766859a30c5601F256D3869332F2068f", // OHM-USDT LP address
+      reserveAddress: "0x2162d3879814bff99e74D1EBb09C2a66e67acBA9", // OHM-USDT LP address
     },
   },
   lpUrl:
@@ -309,15 +309,15 @@ export const ohm_dai = new LPBond({
 //   },
 // });
 
+// TODO (appleseed-expiredBonds): there may be a smarter way to refactor this
+// export const allExpiredBonds = [cvx_expired];
+export const allExpiredBonds: Array<StableBond | LPBond> = [];
 // HOW TO ADD A NEW BOND:
 // Is it a stableCoin bond? use `new StableBond`
 // Is it an LP Bond? use `new LPBond`
 // Add new bonds to this array!!
 // export const allBonds = [dai, frax, eth, cvx, ohm_dai, ohm_frax, lusd, ohm_lusd, ohm_weth];
-// TODO (appleseed-expiredBonds): there may be a smarter way to refactor this
-// export const allExpiredBonds = [cvx_expired];
-export const allExpiredBonds: Array<StableBond | LPBond> = [];
-export const allBonds = [dai];
+export const allBonds = [dai, ohm_dai];
 export const allBondsMap = allBonds.reduce((prevVal, bond) => {
   return { ...prevVal, [bond.name]: bond };
 }, {});
